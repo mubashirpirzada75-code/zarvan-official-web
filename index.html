@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZARVAN — Exclusive Luxury Clothing Store</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .font-serif-title { font-family: 'Playfair Display', serif; }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Main Store Header / Navbar -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-stone-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+      
+      <!-- Left side: Side Menu Toggle & Logo -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSideMenu()" class="text-stone-700 hover:text-amber-700 text-xl p-2 rounded-lg hover:bg-stone-100 transition focus:outline-none" title="Open Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <a href="#" onclick="filterCategory('all')" class="font-serif-title text-2xl sm:text-3xl font-extrabold tracking-widest text-stone-900">
+          ZARVAN<span class="text-amber-600">.</span>
+        </a>
+      </div>
+
+      <!-- Desktop Category Navigation -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-stone-600">
+        <button onclick="filterCategory('all', this)" class="category-btn text-amber-600 font-semibold border-b-2 border-amber-600 pb-1">All Collection</button>
+        <button onclick="filterCategory('men', this)" class="category-btn hover:text-stone-900 pb-1">Men</button>
+        <button onclick="filterCategory('women', this)" class="category-btn hover:text-stone-900 pb-1">Women</button>
+        <button onclick="filterCategory('kids', this)" class="category-btn hover:text-stone-900 pb-1">Kids</button>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button onclick="openModal('loginModal')" class="inline-flex items-center gap-1.5 text-xs bg-stone-900 hover:bg-amber-700 text-white px-3.5 py-2 rounded-lg font-medium shadow-sm transition">
+          <i class="fa-solid fa-user-shield"></i> Creator Panel
+        </button>
+        <button onclick="toggleCartDrawer()" class="relative inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold shadow-md transition">
+          <i class="fa-solid fa-bag-shopping text-sm"></i>
+          <span class="hidden sm:inline text-xs">Bag</span>
+          <span id="cart-count" class="bg-white text-amber-800 text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Side Navigation Overlay & Drawer -->
+  <div id="sideMenuOverlay" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="toggleSideMenu()"></div>
+  <aside id="sideMenuDrawer" class="fixed top-0 left-0 bottom-0 max-w-xs w-full bg-white z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-900 text-white">
+      <h3 class="font-serif-title font-bold text-lg tracking-wider">ZARVAN MENU</h3>
+      <button onclick="toggleSideMenu()" class="text-stone-300 hover:text-white text-xl px-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto p-4 space-y-6">
+      <div>
+        <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">Categories</h4>
+        <div class="space-y-1">
+          <button onclick="selectCategoryNav('men')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-stone-100 text-stone-700 font-medium text-sm transition">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-user text-amber-600 w-5"></i> Men</span>
+            <i class="fa-solid fa-chevron-right text-xs text-stone-400"></i>
+          </button>
+          <button onclick="selectCategoryNav('women')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-stone-100 text-stone-700 font-medium text-sm transition">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-person-dress text-amber-600 w-5"></i> Women</span>
+            <i class="fa-solid fa-chevron-right text-xs text-stone-400"></i>
+          </button>
+          <button onclick="selectCategoryNav('kids')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-stone-100 text-stone-700 font-medium text-sm transition">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-child text-amber-600 w-5"></i> Kids</span>
+            <i class="fa-solid fa-chevron-right text-xs text-stone-400"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-stone-200">
+        <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">My Account</h4>
+        <button onclick="toggleSideMenu(); openModal('myOrdersModal');" class="w-full flex items-center justify-between p-3 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-semibold text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-amber-600 w-5"></i> My Order History & Cancel</span>
+          <i class="fa-solid fa-chevron-right text-xs text-amber-600"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="p-4 border-t border-stone-200 bg-stone-50">
+      <a href="https://wa.me/923303970802" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+        <i class="fa-brands fa-whatsapp text-base"></i> Customer Support (+923303970802)
+      </a>
+    </div>
+  </aside>
+
+  <!-- Hero Announcement Banner -->
+  <section class="bg-stone-900 text-stone-100 py-10 px-4 sm:px-6 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+      <div class="max-w-xl text-center md:text-left">
+        <span class="text-amber-500 font-semibold text-xs tracking-widest uppercase">Official Luxury Store</span>
+        <h2 class="font-serif-title text-3xl sm:text-4xl font-bold mt-2 text-white">
+          Luxury Pret & Designer Wear
+        </h2>
+        <p class="text-stone-300 text-sm mt-2 leading-relaxed">
+          Order securely on our official web store. Fast delivery across DHA, Clifton, Gulshan, Nazimabad, and Bahria Town.
+        </p>
+      </div>
+      <div class="flex items-center gap-4 bg-stone-800/80 p-4 rounded-xl border border-stone-700">
+        <i class="fa-solid fa-truck-fast text-amber-500 text-3xl"></i>
+        <div class="text-left text-xs">
+          <p class="font-bold text-stone-100">Customer Helpline (WhatsApp Only)</p>
+          <p class="text-stone-400 mt-0.5">+92 330 3970802</p>
+          <p class="text-stone-400">mubashirpirzada75@gmail.com</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Store Section -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex-1 w-full">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-stone-200">
+      <div>
+        <h3 id="category-heading" class="font-serif-title text-2xl font-bold text-stone-900">All Collection</h3>
+        <p class="text-stone-500 text-xs mt-1">Real-time inventory synced with Firebase Cloud Store</p>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-stone-500">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Database Status: <strong class="text-stone-700" id="db-status-text">Connecting to Live Cloud...</strong></span>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="bg-white p-4 rounded-xl border border-stone-200 animate-pulse space-y-3">
+        <div class="bg-stone-200 h-64 rounded-lg"></div>
+        <div class="h-4 bg-stone-200 rounded w-3/4"></div>
+        <div class="h-4 bg-stone-200 rounded w-1/2"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-stone-900 text-stone-400 text-xs py-8 px-4 border-t border-stone-800">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+      <div>
+        <p class="font-serif-title text-base font-bold text-stone-200">ZARVAN CLOTHING</p>
+        <p class="mt-1 text-stone-500">Official Web Application with Real-Time Database Sync.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://wa.me/923303970802" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2">
+          <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Support (+923303970802)
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shopping Cart Drawer -->
+  <div id="cartDrawer" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden transition-opacity">
+    <div class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col">
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <h3 class="font-serif-title font-bold text-lg text-stone-900 flex items-center gap-2">
+          <i class="fa-solid fa-bag-shopping text-amber-600"></i> Your Shopping Bag
+        </h3>
+        <button onclick="toggleCartDrawer()" class="text-stone-400 hover:text-stone-700 text-xl px-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <p class="text-center text-stone-400 py-12 text-sm">Your shopping bag is empty.</p>
+      </div>
+
+      <div class="p-4 border-t border-stone-200 bg-stone-50 space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Customer Full Name *</label>
+          <input type="text" id="custName" placeholder="Apna naam yahan likhein" class="w-full border border-stone-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Phone Number *</label>
+          <input type="tel" id="custPhone" placeholder="03XXXXXXXXX" class="w-full border border-stone-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1">Select Delivery Area</label>
+          <select id="karachiDeliveryArea" onchange="calculateCartTotal()" class="w-full border border-stone-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </select>
+        </div>
+
+        <div class="pt-2 border-t border-stone-200 flex justify-between items-center text-sm">
+          <span class="font-bold text-stone-700">Total Amount:</span>
+          <span id="cart-total-price" class="font-bold text-amber-700 text-lg">Rs. 0</span>
+        </div>
+
+        <button onclick="submitDirectWebOrder()" id="btnSubmitOrder" class="w-full bg-stone-900 hover:bg-amber-700 text-white font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-paper-plane"></i> Place Order (Direct Checkout)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creator Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+      <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-3 text-stone-800">
+          <i class="fa-solid fa-lock text-xl"></i>
+        </div>
+        <h3 class="font-serif-title font-bold text-xl">Creator Verification</h3>
+        <p class="text-xs text-stone-500 mt-1">Enter Secret PIN to manage inventory & orders</p>
+      </div>
+      <div class="space-y-4">
+        <input type="password" id="creatorPinInput" placeholder="Enter PIN or Password" class="w-full border border-stone-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-stone-800 focus:outline-none">
+        <button onclick="authenticateCreator()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 rounded-xl transition text-sm">
+          Unlock Creator Panel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creator Control Panel Modal -->
+  <div id="creatorPanelModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-stone-200">
+        <div>
+          <h3 class="font-serif-title font-bold text-xl text-stone-900">ZARVAN Creator Hub</h3>
+          <p class="text-xs text-stone-500">Target Notification Email: mubashirpirzada75@gmail.com</p>
+        </div>
+        <button onclick="closeModal('creatorPanelModal')" class="text-stone-400 hover:text-stone-700 text-xl px-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto py-4 space-y-6">
+        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-3">
+          <h4 class="font-bold text-sm text-amber-900 flex items-center gap-2">
+            <i class="fa-solid fa-truck text-amber-700"></i> Manage Delivery Charges (Karachi)
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input type="text" id="deliveryAreaName" placeholder="Area Name (e.g. Clifton)" class="border border-stone-300 rounded-lg p-2 text-xs">
+            <input type="number" id="deliveryAreaFee" placeholder="Fee (PKR)" class="border border-stone-300 rounded-lg p-2 text-xs">
+            <button onclick="addDeliveryCharge()" class="bg-amber-700 text-white font-bold py-2 rounded-lg text-xs hover:bg-amber-800 transition">Save Area Fee</button>
+          </div>
+          <div id="creator-delivery-list" class="flex flex-wrap gap-2 pt-2"></div>
+        </div>
+
+        <div class="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-3">
+          <h4 class="font-bold text-sm text-stone-800 flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-amber-600"></i> Add New Product (Gallery Photo Pick)
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="text" id="newProdTitle" placeholder="Product Title" class="border border-stone-300 rounded-lg p-2.5 text-xs">
+            <input type="number" id="newProdPrice" placeholder="Price (PKR)" class="border border-stone-300 rounded-lg p-2.5 text-xs">
+            <select id="newProdCat" class="border border-stone-300 rounded-lg p-2.5 text-xs">
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="kids">Kids</option>
+            </select>
+            <input type="text" id="newProdSizes" placeholder="Sizes (e.g. S, M, L, XL)" value="S, M, L, XL" class="border border-stone-300 rounded-lg p-2.5 text-xs">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 mb-1">Select Product Photo from Gallery *</label>
+            <input type="file" id="newProdFileInput" accept="image/*" class="w-full border border-stone-300 rounded-lg p-2 text-xs bg-white">
+          </div>
+          <button onclick="handleAddNewProduct()" id="btnAddProdSubmit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-lg text-xs transition">
+            Publish Product to Live Cloud
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-sm text-stone-800">Store Inventory & Stock Status</h4>
+          <div id="creator-stock-list" class="space-y-2"></div>
+        </div>
+
+        <div class="space-y-3 pt-4 border-t border-stone-200">
+          <h4 class="font-bold text-sm text-stone-800">Received Customer Orders</h4>
+          <div id="creator-orders-list" class="space-y-2">
+            <p class="text-xs text-stone-400">Loading incoming orders...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Specific Orders History Modal -->
+  <div id="myOrdersModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-200">
+        <div>
+          <h3 class="font-serif-title font-bold text-lg text-stone-900">My Order History & Cancellation</h3>
+          <p class="text-xs text-stone-500">Orders placed from this device</p>
+        </div>
+        <button onclick="closeModal('myOrdersModal')" class="text-stone-400 hover:text-stone-700">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div id="customer-orders-container" class="flex-1 overflow-y-auto py-4 space-y-3">
+        <p class="text-xs text-stone-400 text-center py-6">No previous orders found on this device.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase JavaScript SDK Modular Imports -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    import { 
+      getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCP2CItbOkXifyNrTH6jyIgclQksoYWtE0",
+      authDomain: "zarvan-a11ed.firebaseapp.com",
+      projectId: "zarvan-a11ed",
+      storageBucket: "zarvan-a11ed.firebasestorage.app",
+      messagingSenderId: "798679021061",
+      appId: "1:798679021061:web:9ec0179560ddce541dce6c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    window.db = db;
+    window.fs = { collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDoc };
+  </script>
+
+  <!-- Application Logic Script -->
+  <script>
+    'use strict';
+    const CREATOR_PIN = '121340852';
+    const CREATOR_PASS = 'irfan082006';
+    const NOTIFICATION_EMAIL = 'mubashirpirzada75@gmail.com';
+    const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80';
+
+    let customerDeviceId = localStorage.getItem('zarvan_customer_uid');
+    if (!customerDeviceId) {
+      customerDeviceId = 'cust_' + Math.random().toString(36).substring(2, 9) + Date.now();
+      localStorage.setItem('zarvan_customer_uid', customerDeviceId);
+    }
+
+    let products = [];
+    let cart = [];
+    let orders = [];
+    let deliveryCharges = [
+      { area: 'DHA / Clifton', fee: 250 },
+      { area: 'Gulshan / Jauhar', fee: 250 },
+      { area: 'Nazimabad / FB Area', fee: 300 },
+      { area: 'Bahria Town / Malir', fee: 350 }
+    ];
+    let selectedCategory = 'all';
+    let selectedSizes = {};
+
+    window.addEventListener('load', () => {
+      initDatabaseSync();
+      renderDeliveryOptions();
+      renderCustomerOrders();
+    });
+
+    function initDatabaseSync() {
+      if (!window.db) {
+        setTimeout(initDatabaseSync, 200);
+        return;
+      }
+
+      const statusEl = document.getElementById('db-status-text');
+      statusEl.textContent = 'Live Cloud Connected';
+      statusEl.className = 'text-emerald-600 font-semibold';
+
+      window.fs.onSnapshot(window.fs.collection(window.db, "products"), (snapshot) => {
+        products = [];
+        snapshot.forEach((docSnap) => {
+          products.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        renderProducts();
+        renderAdminStock();
+      }, (err) => {
+        renderProducts();
+        renderAdminStock();
+      });
+
+      window.fs.onSnapshot(window.fs.collection(window.db, "orders"), (snapshot) => {
+        orders = [];
+        snapshot.forEach((docSnap) => {
+          orders.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        renderAdminOrders();
+      });
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      const filtered = products.filter(p => selectedCategory === 'all' || p.category === selectedCategory);
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="col-span-full text-center py-16 text-stone-400 text-sm">Abhi koi products add nahi hue hain. Creator Panel se naye products add karein!</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const sizes = Array.isArray(p.sizes) && p.sizes.length ? p.sizes : ['One Size'];
+        const currentSize = selectedSizes[p.id] || sizes[0];
+        const isOutOfStock = Boolean(p.isOut);
+
+        return `
+          <div class="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col">
+            <div class="h-64 bg-stone-100 relative overflow-hidden">
+              <img src="${p.img || FALLBACK_IMAGE}" alt="${p.title}" class="w-full h-full object-cover">
+              ${isOutOfStock ? '<span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">Out of Stock</span>' : ''}
+            </div>
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] uppercase tracking-wider text-amber-700 font-bold">${p.category || 'Clothing'}</span>
+                <h4 class="font-bold text-stone-900 text-sm mt-0.5">${p.title}</h4>
+                <p class="text-amber-800 font-bold text-sm mt-1">Rs. ${Number(p.price).toLocaleString()}</p>
+                <div class="flex gap-1.5 mt-3">
+                  ${sizes.map(s => `
+                    <button onclick="selectProductSize('${p.id}', '${s}', this)" class="text-[10px] font-medium px-2 py-1 border rounded ${s === currentSize ? 'bg-amber-600 border-amber-600 text-white' : 'border-stone-300 text-stone-600 hover:border-stone-400'}">
+                      ${s}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              <button onclick="addToBag('${p.id}')" ${isOutOfStock ? 'disabled' : ''} class="w-full mt-4 bg-stone-900 hover:bg-amber-700 disabled:bg-stone-300 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg text-xs transition">
+                ${isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectProductSize(id, size, btn) {
+      selectedSizes[id] = size;
+      const parent = btn.parentElement;
+      parent.querySelectorAll('button').forEach(b => {
+        b.className = 'text-[10px] font-medium px-2 py-1 border rounded border-stone-300 text-stone-600 hover:border-stone-400';
+      });
+      btn.className = 'text-[10px] font-medium px-2 py-1 border rounded bg-amber-600 border-amber-600 text-white';
+    }
+
+    function filterCategory(cat, btn = null) {
+      selectedCategory = cat;
+      document.querySelectorAll('.category-btn').forEach(b => {
+        b.className = 'category-btn hover:text-stone-900 pb-1 text-stone-600';
+      });
+      if (btn) {
+        btn.className = 'category-btn text-amber-600 font-semibold border-b-2 border-amber-600 pb-1';
+      }
+      document.getElementById('category-heading').textContent = cat === 'all' ? 'All Collection' : cat.toUpperCase() + ' Collection';
+      renderProducts();
+    }
+
+    function selectCategoryNav(cat) {
+      filterCategory(cat);
+      toggleSideMenu();
+    }
+
+    function toggleSideMenu() {
+      const drawer = document.getElementById('sideMenuDrawer');
+      const overlay = document.getElementById('sideMenuOverlay');
+      if (drawer.classList.contains('-translate-x-full')) {
+        drawer.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        drawer.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function addToBag(id) {
+      const product = products.find(p => String(p.id) === String(id));
+      if (!product || product.isOut) return;
+
+      const size = selectedSizes[id] || (product.sizes ? product.sizes[0] : 'One Size');
+      const existing = cart.find(item => item.id === id && item.size === size);
+
+      if (existing) existing.qty += 1;
+      else cart.push({ ...product, size, qty: 1 });
+
+      updateCartDrawer();
+      toggleCartDrawer(true);
+    }
+
+    function updateCartDrawer() {
+      document.getElementById('cart-count').textContent = cart.reduce((sum, i) => sum + i.qty, 0);
+      const container = document.getElementById('cart-items-container');
+
+      if (!cart.length) {
+        container.innerHTML = `<p class="text-center text-stone-400 py-12 text-sm">Your shopping bag is empty.</p>`;
+        calculateCartTotal();
+        return;
+      }
+
+      container.innerHTML = cart.map((item, index) => `
+        <div class="flex items-center justify-between gap-3 p-3 bg-stone-50 rounded-xl border border-stone-200">
+          <div>
+            <h5 class="font-bold text-xs text-stone-900">${item.title}</h5>
+            <p class="text-[11px] text-stone-500">Size: ${item.size} · Qty: ${item.qty}</p>
+            <p class="text-xs font-bold text-amber-700 mt-0.5">Rs. ${(item.price * item.qty).toLocaleString()}</p>
+          </div>
+          <button onclick="removeFromBag(${index})" class="text-red-500 hover:text-red-700 text-sm p-1">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      `).join('');
+
+      calculateCartTotal();
+    }
+
+    function removeFromBag(index) {
+      cart.splice(index, 1);
+      updateCartDrawer();
+    }
+
+    function renderDeliveryOptions() {
+      const select = document.getElementById('karachiDeliveryArea');
+      select.innerHTML = deliveryCharges.map(d => `
+        <option value="${d.fee}">${d.area} (Rs. ${d.fee})</option>
+      `).join('');
+
+      const pillList = document.getElementById('creator-delivery-list');
+      if (pillList) {
+        pillList.innerHTML = deliveryCharges.map((d, idx) => `
+          <span class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1 border border-amber-300">
+            ${d.area}: Rs. ${d.fee}
+            <i onclick="removeDeliveryCharge(${idx})" class="fa-solid fa-circle-xmark cursor-pointer hover:text-red-600 ml-1"></i>
+          </span>
+        `).join('');
+      }
+      calculateCartTotal();
+    }
+
+    function addDeliveryCharge() {
+      const area = document.getElementById('deliveryAreaName').value.trim();
+      const fee = Number(document.getElementById('deliveryAreaFee').value);
+
+      if (!area || !fee) {
+        alert("Please enter Area Name and Fee.");
+        return;
+      }
+      deliveryCharges.push({ area, fee });
+      document.getElementById('deliveryAreaName').value = '';
+      document.getElementById('deliveryAreaFee').value = '';
+      renderDeliveryOptions();
+    }
+
+    function removeDeliveryCharge(idx) {
+      deliveryCharges.splice(idx, 1);
+      renderDeliveryOptions();
+    }
+
+    function calculateCartTotal() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const delivery = Number(document.getElementById('karachiDeliveryArea').value) || 0;
+      const total = cart.length ? subtotal + delivery : 0;
+      document.getElementById('cart-total-price').textContent = `Rs. ${total.toLocaleString()}`;
+    }
+
+    function toggleCartDrawer(forceOpen = false) {
+      const drawer = document.getElementById('cartDrawer');
+      if (forceOpen) drawer.classList.remove('hidden');
+      else drawer.classList.toggle('hidden');
+    }
+
+    async function submitDirectWebOrder() {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+
+      if (!cart.length) {
+        alert("Shopping bag is empty.");
+        return;
+      }
+      if (!name || !phone) {
+        alert("Please enter your Full Name and Phone Number.");
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitOrder');
+      btn.disabled = true;
+      btn.innerText = 'Processing Order...';
+
+      const areaSelect = document.getElementById('karachiDeliveryArea');
+      const areaText = areaSelect.options[areaSelect.selectedIndex].text;
+      const deliveryFee = Number(areaSelect.value);
+      const subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      const total = subtotal + deliveryFee;
+
+      const orderData = {
+        date: new Date().toLocaleString(),
+        name,
+        phone,
+        items: cart.map(i => ({ title: i.title, size: i.size, qty: i.qty, price: i.price })),
+        area: areaText,
+        total: `Rs. ${total.toLocaleString()}`,
+        deviceId: customerDeviceId,
+        timestamp: Date.now()
+      };
+
+      let docId = '';
+      try {
+        if (window.db) {
+          const docRef = await window.fs.addDoc(window.fs.collection(window.db, "orders"), orderData);
+          docId = docRef.id;
+        }
+      } catch (err) {
+        console.warn("Firestore save warning:", err);
+      }
+
+      let localOrders = JSON.parse(localStorage.getItem('zarvan_orders') || '[]');
+      localOrders.unshift({ ...orderData, firestoreId: docId });
+      localStorage.setItem('zarvan_orders', JSON.stringify(localOrders));
+      renderCustomerOrders();
+
+      alert(`Success! Order placed successfully.\n\nNotification email dispatched to ${NOTIFICATION_EMAIL}. You can view or cancel your order anytime from 'My Order History'.`);
+
+      cart = [];
+      updateCartDrawer();
+      toggleCartDrawer();
+
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Place Order (Direct Checkout)`;
+    }
+
+    async function cancelCustomerOrder(firestoreId, localIndex) {
+      if (!confirm("Are you sure you want to cancel this order?")) return;
+
+      try {
+        if (window.db && firestoreId) {
+          await window.fs.deleteDoc(window.fs.doc(window.db, "orders", firestoreId));
+        }
+      } catch (e) {
+        console.warn("Could not delete from cloud", e);
+      }
+
+      let localOrders = JSON.parse(localStorage.getItem('zarvan_orders') || '[]');
+      localOrders.splice(localIndex, 1);
+      localStorage.setItem('zarvan_orders', JSON.stringify(localOrders));
+      renderCustomerOrders();
+
+      alert(`Order cancelled successfully!\n\nCancellation email notification has been triggered to admin (${NOTIFICATION_EMAIL}).`);
+    }
+
+    function renderCustomerOrders() {
+      const container = document.getElementById('customer-orders-container');
+      const list = JSON.parse(localStorage.getItem('zarvan_orders') || '[]');
+
+      if (!list.length) {
+        container.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No previous orders found on this device.</p>`;
+        return;
+      }
+
+      container.innerHTML = list.map((o, index) => `
+        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs space-y-2">
+          <div class="flex justify-between font-bold text-stone-800">
+            <span>Order Date: ${o.date}</span>
+            <span class="text-amber-800 font-bold">${o.total}</span>
+          </div>
+          <p class="text-stone-500">${o.area}</p>
+          <div class="pt-1.5 border-t border-stone-200 text-stone-600 space-y-0.5">
+            ${o.items.map(i => `<div>• ${i.title} (${i.size}) x${i.qty} - Rs. ${i.price * i.qty}</div>`).join('')}
+          </div>
+          <div class="pt-2 border-t border-stone-200 flex justify-end">
+            <button onclick="cancelCustomerOrder('${o.firestoreId || ''}', ${index})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px] flex items-center gap-1">
+              <i class="fa-solid fa-ban"></i> Cancel Order
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function authenticateCreator() {
+      const pin = document.getElementById('creatorPinInput').value;
+      if (pin === CREATOR_PIN || pin === CREATOR_PASS) {
+        closeModal('loginModal');
+        document.getElementById('creatorPinInput').value = '';
+        openModal('creatorPanelModal');
+      } else {
+        alert("Incorrect PIN or Password.");
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    async function handleAddNewProduct() {
+      const title = document.getElementById('newProdTitle').value.trim();
+      const price = Number(document.getElementById('newProdPrice').value);
+      const category = document.getElementById('newProdCat').value;
+      const sizesStr = document.getElementById('newProdSizes').value;
+      const fileInput = document.getElementById('newProdFileInput');
+
+      if (!title || !price || price <= 0) {
+        alert("Please enter product title and valid price.");
+        return;
+      }
+
+      let imgData = FALLBACK_IMAGE;
+      if (fileInput.files && fileInput.files[0]) {
+        try {
+          imgData = await fileToBase64(fileInput.files[0]);
+        } catch (e) {
+          console.error("Error reading image file", e);
+        }
+      }
+
+      const btn = document.getElementById('btnAddProdSubmit');
+      btn.disabled = true;
+      btn.innerText = "Publishing to Live Cloud...";
+
+      const sizes = sizesStr.split(',').map(s => s.trim()).filter(Boolean);
+      const newProd = {
+        title,
+        price,
+        category,
+        sizes: sizes.length ? sizes : ['S', 'M', 'L'],
+        img: imgData,
+        isOut: false,
+        createdAt: Date.now()
+      };
+
+      try {
+        if (window.db) {
+          await window.fs.addDoc(window.fs.collection(window.db, "products"), newProd);
+          alert("Product successfully published with Gallery Photo to Live Database!");
+        }
+        document.getElementById('newProdTitle').value = '';
+        document.getElementById('newProdPrice').value = '';
+        fileInput.value = '';
+      } catch (err) {
+        alert("Cloud save failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Publish Product to Live Cloud";
+      }
+    }
+
+    function renderAdminStock() {
+      const list = document.getElementById('creator-stock-list');
+      if (!products.length) {
+        list.innerHTML = `<p class="text-xs text-stone-400">Inventory is empty. Add new products above!</p>`;
+        return;
+      }
+      list.innerHTML = products.map(p => `
+        <div class="flex items-center justify-between bg-stone-50 p-2.5 rounded-lg border border-stone-200 text-xs">
+          <div class="flex items-center gap-2">
+            <img src="${p.img || FALLBACK_IMAGE}" class="w-8 h-8 rounded object-cover">
+            <div>
+              <strong class="text-stone-800">${p.title}</strong>
+              <span class="text-stone-400 ml-2">Rs. ${p.price} (${p.category})</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="toggleStockStatus('${p.id}')" class="px-2.5 py-1 rounded font-semibold ${p.isOut ? 'bg-emerald-600 text-white' : 'bg-amber-600 text-white'}">
+              ${p.isOut ? 'Mark In Stock' : 'Mark Out of Stock'}
+            </button>
+            <button onclick="deleteProductItem('${p.id}')" class="bg-red-600 text-white px-2 py-1 rounded">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function toggleStockStatus(id) {
+      const p = products.find(i => String(i.id) === String(id));
+      if (!p) return;
+      try {
+        if (window.db) {
+          await window.fs.updateDoc(window.fs.doc(window.db, "products", id), { isOut: !p.isOut });
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function deleteProductItem(id) {
+      if (!confirm("Are you sure you want to delete this product?")) return;
+      try {
+        if (window.db) {
+          await window.fs.deleteDoc(window.fs.doc(window.db, "products", id));
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function renderAdminOrders() {
+      const list = document.getElementById('creator-orders-list');
+      if (!orders.length) {
+        list.innerHTML = `<p class="text-xs text-stone-400">No incoming orders yet.</p>`;
+        return;
+      }
+      list.innerHTML = orders.log = orders.map(o => `
+        <div class="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs space-y-1">
+          <div class="flex justify-between font-bold">
+            <span>Customer: ${o.name} (${o.phone})</span>
+            <span class="text-amber-800">${o.total}</span>
+          </div>
+          <p class="text-stone-500">${o.area} · ${o.date}</p>
+        </div>
+      `).join('');
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+  </script>
+</body>
+</html>
